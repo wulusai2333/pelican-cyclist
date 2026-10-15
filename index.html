@@ -1316,9 +1316,14 @@ function stepSim(dt) {
   bikeRoot.quaternion.multiply(_q1.setFromAxisAngle(V3(1, 0, 0), pitch));
 
   /* ---- 弯道曲率 → 转向角 & 侧倾 ---- */
+  // 前后各取一点求切线夹角得到曲率。注意：JS 的 % 对负数保留符号，
+  // 每圈会有一次 u < du（窗口仅 0.9m），此时 (u - du) % 1 为负，
+  // 传进 CatmullRomCurve3.getTangentAt 会让 three.js 的弧长二分查找越界返回 NaN，
+  // 最终 getPoint(NaN) 取到 undefined 并抛错、整条动画循环停摆。
+  // 因此回绕统一用 (x + 1) % 1 归一化到 [0,1)。
   const du = 0.9 / PATH_LEN;
   pathCurve.getTangentAt((u + du) % 1, _t1).setY(0).normalize();
-  pathCurve.getTangentAt((u - du) % 1, _t2).setY(0).normalize();
+  pathCurve.getTangentAt((u - du + 1) % 1, _t2).setY(0).normalize();
   let dYaw = Math.atan2(_t1.x, _t1.z) - Math.atan2(_t2.x, _t2.z);
   while (dYaw > Math.PI) dYaw -= TAU;
   while (dYaw < -Math.PI) dYaw += TAU;
