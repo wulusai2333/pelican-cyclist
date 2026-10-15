@@ -12,8 +12,10 @@
 
 ## 快速开始
 
+**🔗 在线体验：<https://wulusai2333.github.io/pelican-cyclist/>**
+
 ```bash
-# 直接双击也行，但用本地服务器更稳妥
+# 直接双击 index.html 也行，但用本地服务器更稳妥
 python -m http.server 8000
 # 然后打开 http://localhost:8000/
 ```
