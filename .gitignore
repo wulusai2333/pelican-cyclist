@@ -1,0 +1,7 @@
+# 临时文件
+*.tmp
+tmp_*
+~$*
+
+# 截图工具产物（保留 screenshots/ 里已提交的成品）
+/out.png
